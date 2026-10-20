@@ -1,8 +1,9 @@
 export const profileInfo = {
   name: "Chim Sithy",
   nameKhmer: "ជឹម សិទ្ធី",
-  initialsEn: "CS",
-  initialsKh: "ជ.ស",
+  initialsEn: "T",
+  initialsKh: "T",
+  logoLetter: "T",
   roleEn: "Junior Full-Stack / Web Developer",
   roleKh: "Junior Full-Stack / Web Developer",
   majorEn: "Information Technology (IT)",

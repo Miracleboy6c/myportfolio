@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     meta: {
-      title: "Chim Sithy — Junior Full-Stack / Web Developer",
+      title: "ChimSithy",
       tagline: "IT Student & Web Developer based in Battambang, Cambodia",
     },
     nav: {
@@ -142,7 +142,7 @@ export const translations = {
   },
   kh: {
     meta: {
-      title: "ជឹម សិទ្ធី (Chim Sithy) — Junior Full-Stack / Web Developer",
+      title: "ChimSithy",
       tagline: "និស្សិតព័ត៌មានវិទ្យា និងជាអ្នកអភិវឌ្ឍន៍គេហទំព័រ នៅក្រុងបាត់ដំបង",
     },
     nav: {

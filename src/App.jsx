@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -6,6 +6,10 @@ import TechStack from "./components/TechStack";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Toast from "./components/Toast";
+import ResumeModal from "./components/ResumeModal";
+import ProjectModal from "./components/ProjectModal";
+import SkillModal from "./components/SkillModal";
 import { translations } from "./data/translations";
 
 export default function App() {
@@ -22,8 +26,32 @@ export default function App() {
     if (typeof window !== "undefined" && window.matchMedia) {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
-    return false;
+    return true; // Default to rich modern dark mode
   });
+
+  // Global Toast notification state
+  const [toast, setToast] = useState(null);
+
+  const showToast = useCallback(({ title, message, type = "success" }) => {
+    setToast({ title, message, type });
+  }, []);
+
+  const hideToast = useCallback(() => {
+    setToast(null);
+  }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 3200);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  // Modal states
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedSkill, setSelectedSkill] = useState(null);
 
   // Synchronize dark mode with DOM root and localStorage
   useEffect(() => {
@@ -55,31 +83,107 @@ export default function App() {
       document.body.classList.remove("font-khmer");
     }
 
-    document.title = translations[lang]?.meta?.title || "Chim Sithy — Developer Portfolio";
+    document.title = "ChimSithy";
   }, [lang]);
 
   const t = translations[lang];
 
   return (
-    <div className={`relative min-h-screen flex flex-col transition-colors duration-200 ${lang === "kh" ? "font-khmer" : ""}`}>
-      {/* Subtle Ambient Top Light (Linear/Vercel Spotlight) */}
-      <div className="absolute inset-x-0 top-0 -z-10 h-[500px] bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.08),transparent)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.12),transparent)] pointer-events-none"></div>
+    <div className={`relative min-h-screen flex flex-col transition-colors duration-300 ${lang === "kh" ? "font-khmer" : ""}`}>
+      {/* Dynamic Animated Ambient Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        {/* Orb 1: Indigo / Purple glow at top left */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 sm:w-[550px] sm:h-[550px] rounded-full bg-gradient-to-br from-indigo-500/25 via-purple-500/20 to-transparent blur-3xl animate-orb-1"></div>
 
+        {/* Orb 2: Cyan / Sky glow at mid right */}
+        <div className="absolute top-1/4 -right-32 w-80 h-80 sm:w-[500px] sm:h-[500px] rounded-full bg-gradient-to-bl from-cyan-500/20 via-sky-500/15 to-transparent blur-3xl animate-orb-2"></div>
+
+        {/* Orb 3: Fuchsia / Rose glow at lower left */}
+        <div className="absolute top-2/3 -left-20 w-80 h-80 sm:w-[480px] sm:h-[480px] rounded-full bg-gradient-to-tr from-fuchsia-500/20 via-rose-500/15 to-transparent blur-3xl animate-orb-3"></div>
+
+        {/* Orb 4: Emerald / Teal subtle ambient at bottom right */}
+        <div className="absolute -bottom-20 right-10 w-72 h-72 sm:w-[420px] sm:h-[420px] rounded-full bg-gradient-to-tl from-emerald-500/15 via-teal-500/10 to-transparent blur-3xl animate-orb-1"></div>
+      </div>
+
+      {/* Main Navbar */}
       <Navbar
         lang={lang}
         setLang={setLang}
         t={t}
         isDark={isDark}
         setIsDark={setIsDark}
+        onOpenResume={() => setIsResumeOpen(true)}
+        showToast={showToast}
       />
+
+      {/* Main Content Sections */}
       <main className="flex-1">
-        <Hero lang={lang} t={t} />
-        <About lang={lang} t={t} />
-        <TechStack lang={lang} t={t} />
-        <Projects lang={lang} t={t} />
-        <Contact lang={lang} t={t} />
+        <Hero
+          lang={lang}
+          t={t}
+          onOpenResume={() => setIsResumeOpen(true)}
+          showToast={showToast}
+        />
+        <About
+          lang={lang}
+          t={t}
+          onOpenResume={() => setIsResumeOpen(true)}
+          showToast={showToast}
+        />
+        <TechStack
+          lang={lang}
+          t={t}
+          onSelectSkill={(skill) => setSelectedSkill(skill)}
+          showToast={showToast}
+        />
+        <Projects
+          lang={lang}
+          t={t}
+          onSelectProject={(project) => setSelectedProject(project)}
+          showToast={showToast}
+        />
+        <Contact
+          lang={lang}
+          t={t}
+          showToast={showToast}
+        />
       </main>
-      <Footer lang={lang} t={t} />
+
+      {/* Footer */}
+      <Footer
+        lang={lang}
+        t={t}
+        showToast={showToast}
+      />
+
+      {/* Interactive Global Toast Notification */}
+      <Toast toast={toast} onClose={hideToast} />
+
+      {/* Interactive Resume Modal */}
+      <ResumeModal
+        isOpen={isResumeOpen}
+        onClose={() => setIsResumeOpen(false)}
+        lang={lang}
+        showToast={showToast}
+      />
+
+      {/* Interactive Project Details Modal */}
+      <ProjectModal
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+        lang={lang}
+        showToast={showToast}
+      />
+
+      {/* Interactive Skill Details Modal */}
+      <SkillModal
+        skill={selectedSkill}
+        isOpen={!!selectedSkill}
+        onClose={() => setSelectedSkill(null)}
+        lang={lang}
+        showToast={showToast}
+      />
     </div>
   );
 }
