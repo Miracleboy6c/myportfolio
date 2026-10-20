@@ -1,4 +1,4 @@
-# Chim Sithy (ជឹម សិទ្ធី) — Developer Portfolio
+# Chim Sithy-Portfolio
 
 A modern, executive, and minimalist personal developer portfolio built with **React 19**, **Vite 8**, and **Tailwind CSS v4** in the **Linear / Vercel design aesthetic**. Features an authentic bilingual toggle (**English & Khmer / ខ្មែរ**), dark/light theme persistence, honest technical skill categorization, and direct communication links.
 
